@@ -5,9 +5,15 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CartaRepository")
+ * @UniqueEntity(
+ *     fields={"activa"},
+ *     errorPath="nombre",
+ *     message="Solo puede existir una carta activa a la vez"
+ * )
  */
 class Carta
 {
@@ -24,9 +30,14 @@ class Carta
     private $nombre;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Categoria")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Categoria", cascade={"persist","remove"})
      */
     private $categorias;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $activa;
 
     public function __construct()
     {
@@ -72,6 +83,18 @@ class Carta
         if ($this->categorias->contains($categoria)) {
             $this->categorias->removeElement($categoria);
         }
+
+        return $this;
+    }
+
+    public function getActiva(): ?bool
+    {
+        return $this->activa;
+    }
+
+    public function setActiva(bool $activa): self
+    {
+        $this->activa = $activa;
 
         return $this;
     }

@@ -24,7 +24,7 @@ class Alergeno
     private $nombre;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Plato", mappedBy="elergenos")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Plato", mappedBy="alergenos")
      */
     private $platos;
 
@@ -79,5 +79,9 @@ class Alergeno
         return $this;
     }
 
+    public function __toString()
+    {
+        return $this->nombre;
+    }
 
 }

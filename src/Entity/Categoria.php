@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CategoriaRepository")
  */
@@ -34,8 +35,8 @@ class Categoria
     private $resumen;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Media")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Media", cascade={"persist","remove"})
+     *
      */
     private $imagen;
 
@@ -54,7 +55,7 @@ class Categoria
         return $this->nombre;
     }
 
-    public function setNombre(string $nombre): self
+    public function setNombre(?string $nombre): self
     {
         $this->nombre = $nombre;
 
@@ -69,7 +70,7 @@ class Categoria
         return $this->platos;
     }
 
-    public function addPlato(Plato $plato): self
+    public function addPlato(?Plato $plato): self
     {
         if (!$this->platos->contains($plato)) {
             $this->platos[] = $plato;
@@ -114,5 +115,11 @@ class Categoria
         $this->imagen = $imagen;
 
         return $this;
+    }
+
+
+    public function __toString()
+    {
+        return $this->nombre;
     }
 }

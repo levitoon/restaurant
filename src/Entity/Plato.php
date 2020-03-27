@@ -34,23 +34,17 @@ class Plato
     private $precio;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Ingrediente", inversedBy="platos")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Ingrediente", inversedBy="platos", cascade={"persist","remove"})
      */
     private $ingredientes;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Alergeno", inversedBy="platos")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Alergeno", inversedBy="platos", cascade={"persist","remove"})
      */
-    private $elergenos;
+    private $alergenos;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Media")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $foto;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Categoria", inversedBy="platos")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Categoria", inversedBy="platos", cascade={"persist","remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $categoria;
@@ -60,10 +54,16 @@ class Plato
      */
     private $disponible;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Media", mappedBy="plato", cascade={"persist", "remove"})
+     */
+    private $medias;
+
     public function __construct()
     {
         $this->ingredientes = new ArrayCollection();
-        $this->elergenos = new ArrayCollection();
+        $this->alergenos = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
 
@@ -112,19 +112,6 @@ class Plato
     }
 
 
-    public function removeAlergeno(Alergeno $alergeno): self
-    {
-        if ($this->alergenos->contains($alergeno)) {
-            $this->alergenos->removeElement($alergeno);
-            // set the owning side to null (unless already changed)
-            if ($alergeno->getPlato() === $this) {
-                $alergeno->setPlato(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection|Ingrediente[]
      */
@@ -151,31 +138,6 @@ class Plato
         return $this;
     }
 
-    /**
-     * @return Collection|Alergeno[]
-     */
-    public function getElergenos(): Collection
-    {
-        return $this->elergenos;
-    }
-
-    public function addElergeno(Alergeno $elergeno): self
-    {
-        if (!$this->elergenos->contains($elergeno)) {
-            $this->elergenos[] = $elergeno;
-        }
-
-        return $this;
-    }
-
-    public function removeElergeno(Alergeno $elergeno): self
-    {
-        if ($this->elergenos->contains($elergeno)) {
-            $this->elergenos->removeElement($elergeno);
-        }
-
-        return $this;
-    }
 
     public function getFoto(): ?Media
     {
@@ -211,5 +173,68 @@ class Plato
         $this->disponible = $disponible;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Media[]
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function addMedia(Media $media): self
+    {
+        if (!$this->medias->contains($media)) {
+            $this->medias[] = $media;
+            $media->setPlato($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedia(Media $media): self
+    {
+        if ($this->medias->contains($media)) {
+            $this->medias->removeElement($media);
+            // set the owning side to null (unless already changed)
+            if ($media->getPlato() === $this) {
+                $media->setPlato(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Alergeno[]
+     */
+    public function getAlergenos(): Collection
+    {
+        return $this->alergenos;
+    }
+
+    public function addAlergeno(Alergeno $alergeno): self
+    {
+        if (!$this->alergenos->contains($alergeno)) {
+            $this->alergenos[] = $alergeno;
+        }
+
+        return $this;
+    }
+
+    public function removeAlergeno(Alergeno $alergeno): self
+    {
+        if ($this->alergenos->contains($alergeno)) {
+            $this->alergenos->removeElement($alergeno);
+        }
+
+        return $this;
+    }
+
+
+    public function __toString()
+    {
+        return $this->nombre;
     }
 }

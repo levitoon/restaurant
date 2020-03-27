@@ -1,6 +1,146 @@
-#easy_admin:
-#    entities:
-#        # List the entity class name you want to manage
-#        - App\Entity\Product
-#        - App\Entity\Category
-#        - App\Entity\User
+easy_admin:
+    formats:
+#        number: '%0.0 f'
+    site_name: 'Panel Admin '
+    list:
+        max_results: 18
+#    user:
+#        display_name: true
+#        display_avatar: true
+#        name_property_path: 'username'
+
+    design:
+        brand_color: '#1ABC9C'
+        form_theme: '@EasyAdmin/form/bootstrap_4.html.twig'
+        assets:
+            favicon: '/assets/backend/favicon.png'
+        menu:
+            - { label: 'Previsualizar' }
+            - { label: 'Sitio', route: 'homepage', target: '_blank', icon: 'home'}
+    #        - { label: 'Seguridad de usuarios' }
+    #        - label: 'Seguridad'
+    #          icon: 'lock'
+    #          children:
+    #              - {  entity: 'User', label: 'Usuarios' , icon: 'group' }
+
+            - label: Generales'
+              icon: 'gears'
+              children:
+                  - { entity: 'Alergeno', label: 'Alergenos' , icon: 'check'}
+                  - { entity: 'Ingrediente', label: 'Ingredientes' , icon: 'check'}
+                  - { entity: 'Plato', label: 'Platos ' , icon: 'check'}
+                  - { entity: 'Categoria', label: 'Categorias' , icon: 'check'}
+                  - { entity: 'Carta', label: 'Cartas' , icon: 'check'}
+
+    entities:
+        # List the entity class name you want to manage
+        Ingrediente:
+            class: App\Entity\Ingrediente
+            list:
+                help: 'Puede borrar varios registros a la ves usando la casilla a la izquierda'
+                batch_actions: ['delete']
+                title: 'Listado de ingredientes'
+                actions:
+                    - { name: 'new', icon: 'plus' }
+                    - { name: 'edit', icon: 'pencil', label: false, title: 'Editar'  }
+                    - { name: 'delete', icon: 'remove', label: false, title: 'Eliminar' }
+                fields:
+                    - { property: 'id' }
+                    - { property: 'nombre', label: 'Nombre' }
+            form:  # <-- 'form' is applied to both 'new' and 'edit' views
+                fields:
+                    - { property: 'nombre', label: 'Nombre' }
+        Alergeno:
+            class: App\Entity\Alergeno
+            list:
+                help: 'Puede borrar varios registros a la ves usando la casilla a la izquierda'
+                batch_actions: ['delete']
+                title: 'Listado de alergenos'
+                actions:
+                    - { name: 'new', icon: 'plus' }
+                    - { name: 'edit', icon: 'pencil', label: false, title: 'Editar'  }
+                    - { name: 'delete', icon: 'remove', label: false, title: 'Eliminar' }
+                fields:
+                    - { property: 'id' }
+                    - { property: 'nombre', label: 'Nombre' }
+            form:  # <-- 'form' is applied to both 'new' and 'edit' views
+                fields:
+                    - { property: 'nombre', label: 'Nombre' }
+
+        Plato:
+            class: App\Entity\PLato
+            list:
+                help: 'Puede borrar varios registros a la ves usando la casilla a la izquierda'
+                batch_actions: ['delete']
+                title: 'Listado de Platos'
+                actions:
+                    - { name: 'new', icon: 'plus', label: 'Adicionar Plato' }
+                    - { name: 'edit', icon: 'pencil', label: false, title: 'Editar'  }
+                    - { name: 'delete', icon: 'remove', label: false, title: 'Eliminar' }
+                fields:
+                    - { property: 'id' }
+                    - { property: 'nombre', label: 'Nombre' }
+                    - { property: 'precio', label: 'Precio' }
+                    - { property: 'categoria', label: 'Categoria' }
+                    - { property: 'disponible', label: 'Está disponible' }
+                    - { property: 'categoria', label: 'Categoria' }
+                    - { property: 'medias',  label: 'Medias' }
+            form:  # <-- 'form' is applied to both 'new' and 'edit' views
+                fields:
+                    #          - { type: 'section', label: 'Info de proyecto', icon: 'gear',help: 'Datos generales del proyecto' }
+                    - { type: 'group', label: 'Info del plato', icon: 'gear', columns: 8 }
+                    - { property: 'categoria', label: 'Pertenece a la categoria'  }
+                    - { property: 'nombre', label: 'Nombre del plato'  }
+                    - { property: 'descripcion', label: 'Descripcion' }
+                    - { property: 'precio', label: 'Precio' }
+                    - { property: 'disponible', label: 'Está disponible' }
+                    - { type: 'section', label: 'Otros datos', icon: 'tags' }
+                    - { property: 'ingredientes', label: 'Ingredientes' }
+                    - { property: 'alergenos', label: 'Alergenos' }
+                    - { type: 'group', label: 'Medias del Plato', icon: 'ribon', columns: 4 }
+                    - { property: 'medias', label: 'Imágenes o videos' , type: 'collection', type_options: { entry_type: 'App\Form\MediaType', by_reference: false } }
+
+
+
+        Categoria:
+            class: App\Entity\Categoria
+            list:
+                help: 'Puede borrar varios registros a la ves usando la casilla a la izquierda'
+                batch_actions: ['delete']
+                title: 'Listado de Categorías'
+                actions:
+                    - { name: 'new', icon: 'plus', label: 'Adicionar Categoría' }
+                    - { name: 'edit', icon: 'pencil', label: false, title: 'Editar'  }
+                    - { name: 'delete', icon: 'remove', label: false, title: 'Eliminar' }
+                fields:
+                    - { property: 'id' }
+                    - { property: 'imagen',  type: 'image', label: 'Imagen',  base_path: '%app.path.images%'  }
+                    - { property: 'nombre', label: 'Nombre' }
+                    - { property: 'resumen', label: 'Resumen' }
+                    - { property: 'platos', label: 'Cantidad de platos' }
+            form:  # <-- 'form' is applied to both 'new' and 'edit' views
+                fields:
+                    - { type: 'section', label: 'Info de Categoría', icon: 'gear',help: 'Datos generales de la categoría' }
+                    - { property: 'nombre', label: 'Nombre'  }
+                    - { property: 'resumen', label: 'Resumen' }
+                    - { property: 'imagen', type: 'App\Form\MediaType', label: 'Imagen'  }
+
+
+        Carta:
+            class: App\Entity\Carta
+            list:
+                help: "Recuerde dejar solo una carta activa a la vez"
+                batch_actions: ['delete']
+                title: 'Listado de Cartas'
+                actions:
+                    - { name: 'new', icon: 'plus', label: 'Adicionar Carta' }
+                    - { name: 'edit', icon: 'pencil', label: false, title: 'Editar'  }
+                    - { name: 'delete', icon: 'remove', label: false, title: 'Eliminar' }
+                fields:
+                    - { property: 'id' }
+                    - { property: 'nombre', label: 'Nombre' }
+                    - { property: 'activa', label: 'Está activa' }
+                    - { property: 'categorias', label: 'Cantidad de categorías' }
+
+        Media:
+            class: App\Entity\Media
